@@ -1,11 +1,13 @@
 package toysns.toysns.domain.member.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import toysns.toysns.domain.member.Member;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     public Member createMember(){

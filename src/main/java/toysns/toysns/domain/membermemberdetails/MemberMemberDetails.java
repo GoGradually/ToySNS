@@ -1,4 +1,4 @@
-package toysns.toysns.domain.membersecurity;
+package toysns.toysns.domain.membermemberdetails;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import toysns.toysns.domain.member.Member;
-import toysns.toysns.domain.security.MemberDetails;
+import toysns.toysns.domain.memberdetails.MemberDetails;
 
 @Entity
 @Builder

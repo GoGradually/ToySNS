@@ -1,9 +1,10 @@
-package toysns.toysns.domain.security;
+package toysns.toysns.domain.memberdetails;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import toysns.toysns.domain.membermemberdetails.MemberMemberDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +34,7 @@ public class MemberDetails implements UserDetails {
 
     @Builder.Default
     @OneToMany(mappedBy = "member_details_id")
-    private List<GrantedAuthority> authorities = new ArrayList<>();
+    private List<MemberMemberDetails> authorities = new ArrayList<>();
 
     @Setter
     @Builder.Default

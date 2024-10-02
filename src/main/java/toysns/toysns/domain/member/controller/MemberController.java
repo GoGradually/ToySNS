@@ -33,4 +33,9 @@ public class MemberController {
     public String deleteMemberById(){
         return null;
     }
+
+    @PostMapping("/member/{id}/deactivate")
+    public String deactivateMemberById(){
+        return null;
+    }
 }

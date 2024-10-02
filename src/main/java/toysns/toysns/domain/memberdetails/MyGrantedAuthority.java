@@ -1,4 +1,4 @@
-package toysns.toysns.domain.security;
+package toysns.toysns.domain.memberdetails;
 
 import org.springframework.security.core.GrantedAuthority;
 
