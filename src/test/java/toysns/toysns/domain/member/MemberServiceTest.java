@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
+import toysns.toysns.domain.member.repository.MemberRepository;
+import toysns.toysns.domain.member.service.MemberService;
 
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
 import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,7 +24,8 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 신규_회원_생성_성공(){        //given
+    public void 신규_회원_생성_성공(){
+        //given
         Member newMember = new Member("testId", "test@email.com", "password");
         when(memberRepository.save(any(Member.class))).thenReturn(newMember);
 
@@ -83,7 +84,7 @@ class MemberServiceTest {
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
 
         //when
-        Member foundMember = memberService.getMember(memberId);
+        Member foundMember = memberService.findMemberById(memberId);
 
         //then
         assertNotNull(foundMember);
@@ -95,10 +96,16 @@ class MemberServiceTest {
     @Test
     public void 회원_정보_수정(){
         //given
-        String memberId = "testId";
-        Member originalMember = new Member(memberId, "old@email.com", "oldPassword");
-        Member updatedMember = new Member(memberId, "new@email.com", "newPassword");
-        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(originalMember));
+        Member originalMember = Member.builder()
+                .id(1L)
+                .username("name")
+                .email("old@email.com")
+                .build();
+        Member updatedMember = Member.builder()
+                .username("name")
+                .email("new@email.com")
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(java.util.Optional.of(originalMember));
         when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         //when
@@ -107,7 +114,6 @@ class MemberServiceTest {
         //then
         assertNotNull(result);
         assertEquals("new@email.com", result.getEmail());
-        assertEquals("newPassword", result.getPassword());
         verify(memberRepository, times(1)).findById(memberId);
         verify(memberRepository, times(1)).save(any(Member.class));
 

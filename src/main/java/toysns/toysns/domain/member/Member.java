@@ -1,15 +1,21 @@
 package toysns.toysns.domain.member;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@NoArgsConstructor
+@Builder
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
-    @GeneratedValue
+    @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    private String username;
+
+    private String email;
 
 }
