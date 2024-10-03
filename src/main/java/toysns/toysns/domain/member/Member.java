@@ -18,4 +18,16 @@ public class Member {
 
     private String email;
 
+    @Embedded
+    private Address address;
+
+    private String introduce;
+
+    public void changeAddress(Address address){
+        this.address = address;
+    }
+
+    public void changeIntroduce(String newIntroduce){
+        this.introduce = newIntroduce;
+    }
 }

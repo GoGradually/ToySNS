@@ -10,13 +10,19 @@ import java.util.List;
 
 import static toysns.toysns.domain.member.QMember.member;
 
+
 @Repository
 @RequiredArgsConstructor
 public class MemberQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<Member> findMembersByUsername(){
-        queryFactory.select();
+    public List<Member> findMembersByUsername(String username, Long startId){
+        queryFactory.select(member);
+        return null;
+    }
+    
+    //Todo 페이징 전략 어떻게 할건지
+    public List<Member> findNeighborMembersByUsername(Long memberId, String username){
         return null;
     }
 }

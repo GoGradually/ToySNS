@@ -32,6 +32,8 @@ public class MemberDetails implements UserDetails {
 
     private String password;
 
+    private String email;
+
     @Builder.Default
     @OneToMany(mappedBy = "member_details_id")
     private List<MemberMemberDetails> authorities = new ArrayList<>();

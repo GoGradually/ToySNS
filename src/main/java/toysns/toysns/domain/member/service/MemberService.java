@@ -3,6 +3,7 @@ package toysns.toysns.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import toysns.toysns.domain.member.Member;
+import toysns.toysns.dto.MemberDto;
 
 import java.util.List;
 
@@ -10,25 +11,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
 
-    public Member createMember(){
+    public Member createMember(MemberDto memberDto){
         return null;
     }
-    public Member findMemberById(){
+    public Member findMemberById(Long memberId){
         return null;
     }
-    public List<Member> findMembersByUsername(){
+    public List<Member> findMembersByUsername(String username){
         return null;
     }
-    public List<Member> findMembersByUsernameOrderByFriends(){
+    public List<Member> findNeighborMembersByUsername(Long memberId, String username){
         return null;
     }
 
-    public Member updateMember(){
+    public boolean checkEmail(String email){
+        return false;
+    }
+
+    public boolean checkUsername(String username){
+        return false;
+    }
+
+    public Member updateMember(MemberDto memberDto){
         return null;
     }
-    public void deleteMember(){
+    public void deleteMember(Long memberId){
     }
-    public Member deactivateMember(){
+    public Member deactivateMember(Long memberId){
         return null;
     }
 }
