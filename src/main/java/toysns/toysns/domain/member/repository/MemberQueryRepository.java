@@ -20,9 +20,5 @@ public class MemberQueryRepository {
         queryFactory.select(member);
         return null;
     }
-    
-    //Todo 페이징 전략 어떻게 할건지
-    public List<Member> findNeighborMembersByUsername(Long memberId, String username){
-        return null;
-    }
+
 }

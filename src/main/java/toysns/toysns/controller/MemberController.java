@@ -1,5 +1,6 @@
 package toysns.toysns.controller;
 
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,11 +32,6 @@ public class MemberController {
         return null;
     }
 
-    @GetMapping("/members/{id}")
-    public String findNeighborMembersByUsername(Long id, String username){
-        return null;
-    }
-
     @DeleteMapping("/member/{id}")
     public String deleteMemberById(Long id){
         return null;
@@ -46,10 +42,12 @@ public class MemberController {
         return null;
     }
 
+    @GetMapping("/check/email")
     public String checkEmail(String email){
         return null;
     }
 
+    @GetMapping("/check/username")
     public String checkUsername(String username){
         return null;
     }
