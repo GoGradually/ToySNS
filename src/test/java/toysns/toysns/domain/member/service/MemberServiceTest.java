@@ -1,11 +1,10 @@
-package toysns.toysns.domain.member;
+package toysns.toysns.domain.member.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import toysns.toysns.domain.member.repository.MemberRepository;
-import toysns.toysns.domain.member.service.MemberService;
 
 import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,7 +56,7 @@ class MemberServiceTest {
         verify(memberRepository, never()).save(any(Member.class));
 
     }
-    
+
     @Test
     public void 신규_회원_생성_동일한email(){
         //given

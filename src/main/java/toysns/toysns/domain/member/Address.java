@@ -6,11 +6,6 @@ import toysns.toysns.dto.AddressDto;
 
 import java.util.Objects;
 
-/**
- * Todo
- * null 처리를 어떻게 할 것인가
- */
-
 @Embeddable
 @Getter
 public class Address {
@@ -19,15 +14,15 @@ public class Address {
     private String zipCode;
 
     public Address(String street, String city, String zipCode) {
-        this.street = street;
-        this.city = city;
-        this.zipCode = zipCode;
+        this.street = street == null ? "" : street;
+        this.city = city == null ? "" : city;
+        this.zipCode = zipCode == null ? "" : zipCode;
     }
 
     public Address(AddressDto addressDto){
-        street = addressDto.getStreet();
-        city = addressDto.getCity();
-        zipCode = addressDto.getZipCode();
+        street = addressDto.getStreet() == null ? "" : addressDto.getStreet();
+        city = addressDto.getCity() == null ? "" : addressDto.getCity();
+        zipCode = addressDto.getZipCode() == null ? "" : addressDto.getZipCode();
     }
 
     protected Address() {

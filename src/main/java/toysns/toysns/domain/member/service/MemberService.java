@@ -20,9 +20,6 @@ public class MemberService {
     public List<Member> findMembersByUsername(String username){
         return null;
     }
-    public List<Member> findNeighborMembersByUsername(Long memberId, String username){
-        return null;
-    }
 
     public boolean checkEmail(String email){
         return false;
