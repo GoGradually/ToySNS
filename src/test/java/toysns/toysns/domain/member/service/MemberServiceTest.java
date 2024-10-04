@@ -1,9 +1,11 @@
 package toysns.toysns.domain.member.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberRepository;
 
 import static org.hamcrest.Matchers.any;

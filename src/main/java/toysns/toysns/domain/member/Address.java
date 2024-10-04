@@ -19,12 +19,6 @@ public class Address {
         this.zipCode = zipCode == null ? "" : zipCode;
     }
 
-    public Address(AddressDto addressDto){
-        street = addressDto.getStreet() == null ? "" : addressDto.getStreet();
-        city = addressDto.getCity() == null ? "" : addressDto.getCity();
-        zipCode = addressDto.getZipCode() == null ? "" : addressDto.getZipCode();
-    }
-
     protected Address() {
     }
 
