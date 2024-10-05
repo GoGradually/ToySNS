@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
-import toysns.toysns.dto.MemberDto;
+import toysns.toysns.dto.MemberInfoDto;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
 
-    public Member createMember(MemberDto memberDto){
+    public Member createMember(MemberInfoDto memberInfoDto){
         return null;
     }
     public Member findMemberById(Long memberId){
         return null;
     }
-    public List<Member> findMembersByUsername(String username){
+    public List<Member> findMembersByUsername(String username, String lastUsername){
         return null;
     }
 
@@ -34,12 +34,7 @@ public class MemberService {
         return false;
     }
 
-    public Member updateMember(Long memberId, MemberDto memberDto){
-        return null;
-    }
-    public void deleteMember(Long memberId){
-    }
-    public Member deactivateMember(Long memberId){
+    public Member updateMember(Long memberId, MemberInfoDto memberInfoDto){
         return null;
     }
 }

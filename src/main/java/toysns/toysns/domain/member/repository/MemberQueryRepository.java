@@ -1,5 +1,6 @@
 package toysns.toysns.domain.member.repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,9 +17,15 @@ import static toysns.toysns.domain.member.QMember.member;
 public class MemberQueryRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<Member> findMembersByUsername(String username, Long startId){
+    public List<Member> findMembersByUsername(String username, String lastUsername){
         queryFactory.select(member);
         return null;
     }
 
+    private BooleanExpression usernameEq(String usernameCond){
+        return usernameCond == null ? null : member.username.startsWith(usernameCond);
+    }
+    public BooleanExpression usernameGt(String lastUsernameCond){
+        return lastUsernameCond == null ? null : member.username.gt(lastUsernameCond);
+    }
 }

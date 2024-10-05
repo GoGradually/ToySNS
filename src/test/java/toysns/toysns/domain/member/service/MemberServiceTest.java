@@ -1,7 +1,7 @@
 package toysns.toysns.domain.member.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,10 +9,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
+import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.AddressDto;
-import toysns.toysns.dto.MemberDto;
+import toysns.toysns.dto.MemberInfoDto;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +28,8 @@ class MemberServiceTest {
 
     @Mock
     MemberRepository memberRepository;
+    @Mock
+    MemberQueryRepository memberQueryRepository;
     @InjectMocks
     MemberService memberService;
 
@@ -32,7 +41,7 @@ class MemberServiceTest {
     @Test
     public void 신규_회원_생성_성공(){
         //given
-        MemberDto memberDto = new MemberDto("testId", "test@email.com", "hello", new AddressDto(null, null, null));
+        MemberInfoDto memberInfoDto = new MemberInfoDto("testId", "test@email.com", "hello", new AddressDto(null, null, null));
         Member member = Member.builder()
                 .username("testId")
                 .email("test@email.com")
@@ -44,7 +53,7 @@ class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         //when
-        Member savedMember = memberService.createMember(memberDto);
+        Member savedMember = memberService.createMember(memberInfoDto);
 
         //then
         assertNotNull(savedMember);
@@ -60,12 +69,12 @@ class MemberServiceTest {
         Member existingMember = Member.builder()
                 .username("existingId")
                 .build();
-        MemberDto newMemberDto = new MemberDto("existingId", null, null, new AddressDto(null, null, null));
+        MemberInfoDto newMemberInfoDto = new MemberInfoDto("existingId", null, null, new AddressDto(null, null, null));
         when(memberRepository.findByUsername("existingId")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.createMember(newMemberDto);
+            memberService.createMember(newMemberInfoDto);
         });
 
         //then
@@ -81,12 +90,12 @@ class MemberServiceTest {
                 .username("existingId")
                 .email("existing@email.com")
                 .build();
-        MemberDto newMemberDto = new MemberDto("newId", "existing@email.com", null, null);
+        MemberInfoDto newMemberInfoDto = new MemberInfoDto("newId", "existing@email.com", null, null);
         when(memberRepository.findByEmail("existing@email.com")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.createMember(newMemberDto);
+            memberService.createMember(newMemberInfoDto);
         });
 
         //then
@@ -131,12 +140,12 @@ class MemberServiceTest {
                 .introduce("hi")
                 .address(new Address("", "", ""))
                 .build();
-        MemberDto updateMemberDto = new MemberDto(updatedMember);
+        MemberInfoDto updateMemberInfoDto = new MemberInfoDto(updatedMember);
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(originalMember));
         when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         //when
-        Member result = memberService.updateMember(memberId, updateMemberDto);
+        Member result = memberService.updateMember(memberId, updateMemberInfoDto);
 
         //then
         assertNotNull(result);
@@ -146,4 +155,80 @@ class MemberServiceTest {
 
     }
 
+    @Test
+    void email_검사_존재O(){
+        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .build();
+        when(memberRepository.findByEmail("test@email.com")).thenReturn(Optional.ofNullable(member));
+
+        //when
+        boolean result = memberService.checkEmail("test@email.com");
+
+        //then
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void email_검사_존재X(){
+        //given
+        when(memberRepository.findByEmail("test@email.com")).thenReturn(Optional.empty());
+
+        //when
+        boolean result = memberService.checkEmail("test@email.com");
+
+        //then
+        assertThat(result).isTrue();
+    }
+    @Test
+    void username_검사_존재O(){
+        //given
+        Member member = Member.builder()
+                        .username("test")
+                                .build();
+        when(memberRepository.findByUsername("test")).thenReturn(Optional.ofNullable(member));
+
+        //when
+        boolean result = memberService.checkUsername("test");
+
+        //then
+        assertThat(result).isFalse();
+    }
+    @Test
+    void username_검사_존재X(){
+        //given
+        when(memberRepository.findByUsername("test")).thenReturn(Optional.empty());
+
+        //when
+        boolean result = memberService.checkUsername("test");
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+
+    @Test
+    void MemberQueryRepository_사용자_검색_호출_성공() {
+        List<Member> mockUsers = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            mockUsers.add(
+                    Member.builder()
+                            .id((long) i)
+                            .username("user" + i)
+                            .build()
+            );
+        }
+
+        when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
+
+        List<Member> result = memberService.findMembersByUsername("user", null);
+
+        assertEquals(10, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals("User 10", result.get(9).getUsername());
+
+        verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
+    }
 }

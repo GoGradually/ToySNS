@@ -1,13 +1,11 @@
 package toysns.toysns.controller;
 
-import lombok.Getter;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toysns.toysns.dto.AddressDto;
-import toysns.toysns.dto.MemberDto;
+import toysns.toysns.dto.MemberInfoDto;
 
 @RestController
 public class MemberController {
@@ -18,7 +16,7 @@ public class MemberController {
     }
 
     @PostMapping("/member/{id}")
-    public String updateMember(Long id, MemberDto memberDto){
+    public String updateMember(Long id, MemberInfoDto memberInfoDto){
         return null;
     }
 
