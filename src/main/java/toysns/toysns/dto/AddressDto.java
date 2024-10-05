@@ -9,6 +9,12 @@ public class AddressDto {
     private String city;
     private String zipCode;
 
+    public AddressDto(String street, String city, String zipCode) {
+        this.street = street;
+        this.city = city;
+        this.zipCode = zipCode;
+    }
+
     public AddressDto(Address address){
         street = address.getStreet();
         city = address.getCity();

@@ -11,6 +11,13 @@ public class MemberDto {
     private String introduce;
     private AddressDto addressDto;
 
+    public MemberDto(String username, String email, String introduce, AddressDto addressDto) {
+        this.username = username;
+        this.email = email;
+        this.introduce = introduce;
+        this.addressDto = addressDto;
+    }
+
     public MemberDto(Member member){
         memberId = member.getId();
         username = member.getUsername();

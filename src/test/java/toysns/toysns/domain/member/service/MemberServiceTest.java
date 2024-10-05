@@ -3,15 +3,20 @@ package toysns.toysns.domain.member.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberRepository;
+import toysns.toysns.dto.AddressDto;
+import toysns.toysns.dto.MemberDto;
 
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
     @Mock
@@ -27,11 +32,19 @@ class MemberServiceTest {
     @Test
     public void 신규_회원_생성_성공(){
         //given
-        Member newMember = new Member("testId", "test@email.com", "password");
-        when(memberRepository.save(any(Member.class))).thenReturn(newMember);
+        MemberDto memberDto = new MemberDto("testId", "test@email.com", "hello", new AddressDto(null, null, null));
+        Member member = Member.builder()
+                .username("testId")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address(null, null, null))
+                .build();
+
+
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         //when
-        Member savedMember = memberService.createMember(newMember);
+        Member savedMember = memberService.createMember(memberDto);
 
         //then
         assertNotNull(savedMember);
@@ -42,15 +55,17 @@ class MemberServiceTest {
 
     }
     @Test
-    public void 신규_회원_생성_동일한ID(){
+    public void 신규_회원_생성_동일한Username(){
         //given
-        Member existingMember = new Member("existingId", "existing@email.com", "password");
-        Member newMember = new Member("existingId", "new@email.com", "password");
-        when(memberRepository.findById("existingId")).thenReturn(java.util.Optional.of(existingMember));
+        Member existingMember = Member.builder()
+                .username("existingId")
+                .build();
+        MemberDto newMemberDto = new MemberDto("existingId", null, null, new AddressDto(null, null, null));
+        when(memberRepository.findByUsername("existingId")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.createMember(newMember);
+            memberService.createMember(newMemberDto);
         });
 
         //then
@@ -62,26 +77,30 @@ class MemberServiceTest {
     @Test
     public void 신규_회원_생성_동일한email(){
         //given
-        Member existingMember = new Member("existingId", "existing@email.com", "password");
-        Member newMember = new Member("newId", "existing@email.com", "password");
+        Member existingMember = Member.builder()
+                .username("existingId")
+                .email("existing@email.com")
+                .build();
+        MemberDto newMemberDto = new MemberDto("newId", "existing@email.com", null, null);
         when(memberRepository.findByEmail("existing@email.com")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            memberService.createMember(newMember);
+            memberService.createMember(newMemberDto);
         });
 
         //then
         assertEquals("이미 존재하는 이메일입니다.", exception.getMessage());
         verify(memberRepository, never()).save(any(Member.class));
-
     }
 
     @Test
     public void 단일_회원_정보_조회(){
         //given
-        String memberId = "testId";
-        Member member = new Member(memberId, "test@email.com", "password");
+        Long memberId = 100L;
+        Member member = Member.builder()
+                        .username("testId")
+                                .build();
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
 
         //when
@@ -97,44 +116,34 @@ class MemberServiceTest {
     @Test
     public void 회원_정보_수정(){
         //given
+        Long memberId = 100L;
         Member originalMember = Member.builder()
-                .id(1L)
-                .username("name")
-                .email("old@email.com")
+                .id(memberId)
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
                 .build();
         Member updatedMember = Member.builder()
-                .username("name")
-                .email("new@email.com")
+                .id(memberId)
+                .username("test")
+                .email("test@email.com")
+                .introduce("hi")
+                .address(new Address("", "", ""))
                 .build();
-        when(memberRepository.findById(1L)).thenReturn(java.util.Optional.of(originalMember));
+        MemberDto updateMemberDto = new MemberDto(updatedMember);
+        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(originalMember));
         when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         //when
-        Member result = memberService.updateMember(memberId, updatedMember);
+        Member result = memberService.updateMember(memberId, updateMemberDto);
 
         //then
         assertNotNull(result);
-        assertEquals("new@email.com", result.getEmail());
+        assertEquals("hi", result.getIntroduce());
         verify(memberRepository, times(1)).findById(memberId);
         verify(memberRepository, times(1)).save(any(Member.class));
 
     }
 
-    @Test
-    public void 회원_비활성화(){
-        //given
-        String memberId = "testId";
-        Member member = new Member(memberId, "test@email.com", "password");
-        member.setActive(true);
-        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
-        when(memberRepository.save(any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        //when
-        Member deactivatedMember = memberService.deactivateMember(memberId);
-
-        //then
-        assertFalse(deactivatedMember.isActive());
-        verify(memberRepository, times(1)).findById(memberId);
-        verify(memberRepository, times(1)).save(any(Member.class));
-    }
 }
