@@ -130,11 +130,11 @@ class MemberQueryRepositoryTest {
         em.clear();
 
         //when
-        List<Member> findMembers = memberQueryRepository.findMembersByUsername("test", "test18");
+        List<Member> findMembers = memberQueryRepository.findMembersByUsername("test", "test17");
 
         //then
         assertThat(findMembers).hasSize(10);
         assertThat(findMembers).allMatch(m -> m.getUsername().startsWith("test"));
-        assertThat(findMembers).allMatch(m->m.getUsername().compareTo("test18") > 0);
+        assertThat(findMembers).allMatch(m->m.getUsername().compareTo("test17") > 0);
     }
 }
