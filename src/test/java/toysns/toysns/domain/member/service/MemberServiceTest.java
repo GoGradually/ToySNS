@@ -246,4 +246,68 @@ class MemberServiceTest {
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
+
+    //Todo
+    @Test
+    void findById_삭제된_계정(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void findById_비활성화된_계정(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void 계정_활성화(){
+        //given
+
+        //when
+
+        //then
+
+    }
+    //Todo
+    @Test
+    void 계정_비활성화(){
+        //given
+
+        //when
+
+        //then
+
+    }
+    //Todo
+    @Test
+    void 계정_삭제(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void 계정_복구(){
+        //given
+
+        //when
+
+        //then
+
+    }
 }

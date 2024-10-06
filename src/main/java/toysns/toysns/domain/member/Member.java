@@ -2,6 +2,9 @@ package toysns.toysns.domain.member;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -23,11 +26,40 @@ public class Member {
 
     private String introduce;
 
+    private boolean active = true;
+
+    private LocalDateTime deletedDateTime = null;
+
     public void changeAddress(Address address){
         this.address = address;
     }
 
     public void changeIntroduce(String newIntroduce){
         this.introduce = newIntroduce;
+    }
+
+    public void activate(){
+        if(this.active){
+            throw new IllegalStateException();
+        }
+        this.active = true;
+    }
+    public void deactivate() {
+        if(!this.active){
+            throw new IllegalStateException();
+        }
+        this.active = false;
+    }
+    public void deleteAccount() {
+        if(this.deletedDateTime != null){
+            throw new IllegalStateException();
+        }
+        this.deletedDateTime = LocalDateTime.now();
+    }
+    public void restoreAccount() {
+        if(this.deletedDateTime == null){
+            throw new IllegalStateException();
+        }
+        this.deletedDateTime = null;
     }
 }

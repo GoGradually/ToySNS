@@ -1,17 +1,21 @@
-package toysns.toysns.controller;
+package toysns.toysns.domain.member.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toysns.toysns.domain.member.service.MemberService;
 import toysns.toysns.dto.AddressDto;
 import toysns.toysns.dto.MemberInfoDto;
 
 @RestController
+@RequiredArgsConstructor
 public class MemberController {
+    private final MemberService memberService;
 
     @PostMapping("/member/create")
-    public String createMember(String username, String password, String email, String introduce, AddressDto addressDto){
+    public String createMember(MemberInfoDto memberInfoDto){
         return null;
     }
 
@@ -26,12 +30,22 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public String findMembersByUsername(String username){
+    public String findMembersByUsername(String username, String lastUsername){
         return null;
     }
 
-    @DeleteMapping("/member/{id}")
+    @PostMapping("/member/{id}/delete")
     public String deleteMemberById(Long id){
+        return null;
+    }
+
+    @PostMapping("/member/{id}/restore")
+    public String restoreMemberById(Long id){
+        return null;
+    }
+
+    @PostMapping("/member/{id}/activate")
+    public String activateMemberById(Long id){
         return null;
     }
 

@@ -74,4 +74,49 @@ class MemberTest {
         assertThat(member.getAddress()).isNull();
         assertThat(member.getIntroduce()).isNull();
     }
+
+    //Todo
+    @Test
+    void 계정_활성화(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void 계정_비활성화(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void 계정_삭제(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
+    //Todo
+    @Test
+    void 계정_복구(){
+        //given
+
+        //when
+
+        //then
+
+    }
+
 }

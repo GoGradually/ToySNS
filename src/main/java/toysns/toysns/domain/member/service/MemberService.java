@@ -7,6 +7,7 @@ import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,6 +36,22 @@ public class MemberService {
     }
 
     public Member updateMember(Long memberId, MemberInfoDto memberInfoDto){
+        return null;
+    }
+
+    public boolean deactivateMemberById(Long id) {
+        return false;
+    }
+
+    public boolean activateMemberById(Long id){
+        return false;
+    }
+
+    public LocalDateTime deleteMemberById(Long id) {
+        return null;
+    }
+
+    public LocalDateTime restoreMemberById(Long id){
         return null;
     }
 }
