@@ -231,4 +231,19 @@ class MemberServiceTest {
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
+
+    @Test
+    void MemberQueryRepository_사용자_검색_호출_존재X() {
+        List<Member> mockUsers = new ArrayList<>();
+
+        when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
+
+        List<Member> result = memberService.findMembersByUsername("user", null);
+
+        assertEquals(10, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals("User 10", result.get(9).getUsername());
+
+        verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
+    }
 }

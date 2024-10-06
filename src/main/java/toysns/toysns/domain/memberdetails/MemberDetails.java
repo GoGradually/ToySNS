@@ -35,7 +35,7 @@ public class MemberDetails implements UserDetails {
     private String email;
 
     @Builder.Default
-    @OneToMany(mappedBy = "member_details_id")
+    @OneToMany(mappedBy = "memberDetails")
     private List<MemberMemberDetails> authorities = new ArrayList<>();
 
     @Setter
