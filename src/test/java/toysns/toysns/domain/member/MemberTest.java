@@ -55,10 +55,30 @@ class MemberTest {
         String newIntroduce = "New introduction";
 
         // When
-        member.changeIntroduce(newIntroduce);
+        boolean result = member.changeIntroduce(newIntroduce);
 
         // Then
+        assertThat(result).isTrue();
         assertThat(member.getIntroduce()).isEqualTo(newIntroduce);
+    }
+
+    @Test
+    void testChangeIntroduceTooLong() {
+        // Given
+        String oldIntroduction = "Old introduction";
+        Member member = Member.builder()
+                .username("testuser")
+                .introduce(oldIntroduction)
+                .build();
+        String newIntroduce = "New introduction but too long @@@@@@@@@@@@@@@@@@@@@@@@@@" +
+                "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+
+        // When
+        boolean result = member.changeIntroduce(newIntroduce);
+
+        // Then
+        assertThat(result).isFalse();
+        assertThat(member.getIntroduce()).isEqualTo(oldIntroduction);
     }
 
     @Test

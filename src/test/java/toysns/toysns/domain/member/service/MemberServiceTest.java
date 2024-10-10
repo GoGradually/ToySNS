@@ -1,6 +1,5 @@
 package toysns.toysns.domain.member.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +12,11 @@ import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.AddressDto;
 import toysns.toysns.dto.MemberInfoDto;
+import toysns.toysns.domain.member.execption.ConflictEmailException;
+import toysns.toysns.domain.member.execption.ConflictUsernameException;
+import toysns.toysns.domain.member.execption.MemberNotExistException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,7 @@ class MemberServiceTest {
         when(memberRepository.findByUsername("existingId")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(ConflictUsernameException.class, () -> {
             memberService.createMember(newMemberInfoDto);
         });
 
@@ -94,7 +95,7 @@ class MemberServiceTest {
         when(memberRepository.findByEmail("existing@email.com")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(ConflictEmailException.class, () -> {
             memberService.createMember(newMemberInfoDto);
         });
 
@@ -119,6 +120,18 @@ class MemberServiceTest {
         assertNotNull(foundMember);
         assertEquals(memberId, foundMember.getId());
         assertEquals("test@email.com", foundMember.getEmail());
+        verify(memberRepository, times(1)).findById(memberId);
+    }
+    @Test
+    public void 단일_회원_정보_조회_존재하지_않는_ID(){
+        //given
+        Long memberId = 100L;
+        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.empty());
+
+        //when
+
+        //then
+        assertThrows(MemberNotExistException.class, ()->{memberService.findMemberById(memberId);});
         verify(memberRepository, times(1)).findById(memberId);
     }
 

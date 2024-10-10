@@ -30,12 +30,14 @@ public class Member {
 
     private LocalDateTime deletedDateTime = null;
 
-    public void changeAddress(Address address){
+    public boolean changeAddress(Address address){
         this.address = address;
+        return true;
     }
 
-    public void changeIntroduce(String newIntroduce){
+    public boolean changeIntroduce(String newIntroduce){
         this.introduce = newIntroduce;
+        return true;
     }
 
     public void activate(){
