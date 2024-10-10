@@ -32,6 +32,7 @@ class MemberQueryRepositoryTest {
                     .introduce("hello")
                     .address(new Address("", "", ""))
                     .build();
+            em.persist(member);
         }
         for (int i = 0; i < 10; i++) {
             Member member = Member.builder()
