@@ -2,6 +2,7 @@ package toysns.toysns.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
@@ -17,7 +18,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
 
-    public Member createMember(MemberInfoDto memberInfoDto){
+    public Member createMember(Member member){
         return null;
     }
     public Member findMemberById(Long memberId){
@@ -35,7 +36,11 @@ public class MemberService {
         return false;
     }
 
-    public Member updateMember(Long memberId, MemberInfoDto memberInfoDto){
+    public Member updateMemberIntroduce(Long memberId, String newIntroduce){
+        return null;
+    }
+
+    public Member updateMemberAddress(Long memberId, Address address){
         return null;
     }
 

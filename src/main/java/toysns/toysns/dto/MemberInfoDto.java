@@ -1,6 +1,7 @@
 package toysns.toysns.dto;
 
 import lombok.Data;
+import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 
 @Data
@@ -9,13 +10,13 @@ public class MemberInfoDto {
     private String username;
     private String email;
     private String introduce;
-    private AddressDto addressDto;
+    private Address address;
 
-    public MemberInfoDto(String username, String email, String introduce, AddressDto addressDto) {
+    public MemberInfoDto(String username, String email, String introduce, Address address) {
         this.username = username;
         this.email = email;
         this.introduce = introduce;
-        this.addressDto = addressDto;
+        this.address = address;
     }
 
     public MemberInfoDto(Member member){
@@ -23,6 +24,9 @@ public class MemberInfoDto {
         username = member.getUsername();
         email = member.getEmail();
         introduce = member.getIntroduce();
-        addressDto = new AddressDto(member.getAddress());
+        address = member.getAddress();
+    }
+
+    public MemberInfoDto() {
     }
 }

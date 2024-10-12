@@ -1,7 +1,6 @@
 package toysns.toysns.domain.member;
 
 import org.junit.jupiter.api.Test;
-import toysns.toysns.dto.AddressDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 

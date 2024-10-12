@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toysns.toysns.domain.member.service.MemberService;
-import toysns.toysns.dto.AddressDto;
 import toysns.toysns.dto.MemberInfoDto;
 
 @RestController

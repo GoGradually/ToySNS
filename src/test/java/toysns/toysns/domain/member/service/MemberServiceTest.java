@@ -10,11 +10,10 @@ import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
-import toysns.toysns.dto.AddressDto;
 import toysns.toysns.dto.MemberInfoDto;
 import toysns.toysns.domain.member.execption.ConflictEmailException;
 import toysns.toysns.domain.member.execption.ConflictUsernameException;
-import toysns.toysns.domain.member.execption.MemberNotExistException;
+import toysns.toysns.domain.member.execption.MemberNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ class MemberServiceTest {
     @Test
     public void 신규_회원_생성_성공(){
         //given
-        MemberInfoDto memberInfoDto = new MemberInfoDto("testId", "test@email.com", "hello", new AddressDto(null, null, null));
+        MemberInfoDto memberInfoDto = new MemberInfoDto("testId", "test@email.com", "hello", new Address(null, null, null));
         Member member = Member.builder()
                 .username("testId")
                 .email("test@email.com")
@@ -54,7 +53,7 @@ class MemberServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         //when
-        Member savedMember = memberService.createMember(memberInfoDto);
+        Member savedMember = memberService.createMember(member);
 
         //then
         assertNotNull(savedMember);
@@ -70,13 +69,12 @@ class MemberServiceTest {
         Member existingMember = Member.builder()
                 .username("existingId")
                 .build();
-        MemberInfoDto newMemberInfoDto = new MemberInfoDto("existingId", null, null, new AddressDto(null, null, null));
+        MemberInfoDto newMemberInfoDto = new MemberInfoDto("existingId", null, null, new Address(null, null, null));
         when(memberRepository.findByUsername("existingId")).thenReturn(java.util.Optional.of(existingMember));
 
         //when
-        Exception exception = assertThrows(ConflictUsernameException.class, () -> {
-            memberService.createMember(newMemberInfoDto);
-        });
+        Exception exception = assertThrows(ConflictUsernameException.class, () ->
+                memberService.createMember(existingMember));
 
         //then
         assertEquals("이미 존재하는 ID입니다.", exception.getMessage());
@@ -88,7 +86,7 @@ class MemberServiceTest {
     public void 신규_회원_생성_동일한email(){
         //given
         Member existingMember = Member.builder()
-                .username("existingId")
+                .username("nonExistingId")
                 .email("existing@email.com")
                 .build();
         MemberInfoDto newMemberInfoDto = new MemberInfoDto("newId", "existing@email.com", null, null);
@@ -96,7 +94,7 @@ class MemberServiceTest {
 
         //when
         Exception exception = assertThrows(ConflictEmailException.class, () -> {
-            memberService.createMember(newMemberInfoDto);
+            memberService.createMember(existingMember);
         });
 
         //then
@@ -131,12 +129,12 @@ class MemberServiceTest {
         //when
 
         //then
-        assertThrows(MemberNotExistException.class, ()->{memberService.findMemberById(memberId);});
+        assertThrows(MemberNotFoundException.class, ()-> memberService.findMemberById(memberId));
         verify(memberRepository, times(1)).findById(memberId);
     }
 
     @Test
-    public void 회원_정보_수정(){
+    public void 회원_소개_수정(){
         //given
         Long memberId = 100L;
         Member originalMember = Member.builder()
@@ -146,25 +144,40 @@ class MemberServiceTest {
                 .introduce("hello")
                 .address(new Address("", "", ""))
                 .build();
-        Member updatedMember = Member.builder()
-                .id(memberId)
-                .username("test")
-                .email("test@email.com")
-                .introduce("hi")
-                .address(new Address("", "", ""))
-                .build();
-        MemberInfoDto updateMemberInfoDto = new MemberInfoDto(updatedMember);
+        String newIntroduce = "hi";
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(originalMember));
-        when(memberRepository.save(any(Member.class))).thenReturn(updatedMember);
 
         //when
-        Member result = memberService.updateMember(memberId, updateMemberInfoDto);
+        Member result = memberService.updateMemberIntroduce(memberId, newIntroduce);
 
         //then
         assertNotNull(result);
         assertEquals("hi", result.getIntroduce());
         verify(memberRepository, times(1)).findById(memberId);
-        verify(memberRepository, times(1)).save(any(Member.class));
+
+    }
+
+    @Test
+    void 회원_주소_수정(){
+        //given
+        Long memberId = 100L;
+        Member originalMember = Member.builder()
+                .id(memberId)
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .build();
+        Address newAddress = new Address("new", "city", "haha");
+        when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(originalMember));
+
+        //when
+        Member result = memberService.updateMemberAddress(memberId, newAddress);
+
+        //then
+        assertNotNull(result);
+        assertEquals(newAddress, result.getAddress());
+        verify(memberRepository, times(1)).findById(memberId);
 
     }
 

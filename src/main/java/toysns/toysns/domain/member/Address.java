@@ -2,7 +2,6 @@ package toysns.toysns.domain.member;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
-import toysns.toysns.dto.AddressDto;
 
 import java.util.Objects;
 
