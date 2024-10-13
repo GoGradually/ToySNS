@@ -80,9 +80,9 @@ class MemberControllerTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto(member); // 필요한 데이터 설정
         when(memberService.updateMemberIntroduce(eq(id), newIntroduce)).thenReturn(member);
 
-        mockMvc.perform(post("/member/{id}", id)
+        mockMvc.perform(post("/member/{id}/introduce", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memberInfoDto))) // JSON 형식의 요청 본문
+                        .content(objectMapper.writeValueAsString(newIntroduce))) // JSON 형식의 요청 본문
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
@@ -104,7 +104,7 @@ class MemberControllerTest {
         MemberInfoDto memberInfoDto = new MemberInfoDto(member);
         when(memberService.updateMemberAddress(id, address)).thenReturn(member);
 
-        mockMvc.perform(post("/member/{id}", id)
+        mockMvc.perform(post("/member/{id}/address", id)
                 .param("address", objectMapper.writeValueAsString(address)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));

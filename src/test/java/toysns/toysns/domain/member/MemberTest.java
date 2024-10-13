@@ -3,6 +3,9 @@ package toysns.toysns.domain.member;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import toysns.toysns.domain.member.execption.DeactivatedMemberException;
+import toysns.toysns.domain.member.execption.DeletedMemberException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberTest {
@@ -44,6 +47,30 @@ class MemberTest {
         // Then
         assertThat(member.getAddress()).isEqualTo(newAddress);
     }
+    @Test
+    void testChangeAddressDeactivated() {
+        // Given
+        Member member = Member.builder()
+                .username("testuser")
+                .address(new Address("Old City", "Old Street", "00000"))
+                .build();
+        Address newAddress = new Address("New City", "New Street", "12345");
+
+        // When
+        assertThrows(DeactivatedMemberException.class, () -> member.changeAddress(newAddress));
+    }
+    @Test
+    void testChangeAddressDeleted() {
+        // Given
+        Member member = Member.builder()
+                .username("testuser")
+                .address(new Address("Old City", "Old Street", "00000"))
+                .build();
+        Address newAddress = new Address("New City", "New Street", "12345");
+
+        // When
+        assertThrows(DeletedMemberException.class, () -> member.changeAddress(newAddress));
+    }
 
     @Test
     void testChangeIntroduce() {
@@ -62,24 +89,34 @@ class MemberTest {
         assertThat(member.getIntroduce()).isEqualTo(newIntroduce);
     }
 
+
     @Test
-    void testChangeIntroduceTooLong() {
+    void testChangeIntroduceDeactivated() {
         // Given
         String oldIntroduction = "Old introduction";
         Member member = Member.builder()
                 .username("testuser")
                 .introduce(oldIntroduction)
                 .build();
-        String newIntroduce = "New introduction but too long @@@@@@@@@@@@@@@@@@@@@@@@@@" +
-                "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+        String newIntroduce = "New introduction but deactivatedMember";
 
         // When
-        boolean result = member.changeIntroduce(newIntroduce);
-
-        // Then
-        assertThat(result).isFalse();
-        assertThat(member.getIntroduce()).isEqualTo(oldIntroduction);
+        assertThrows(DeactivatedMemberException.class, () -> member.changeIntroduce(newIntroduce));
     }
+    @Test
+    void testChangeIntroduceDeleted() {
+        // Given
+        String oldIntroduction = "Old introduction";
+        Member member = Member.builder()
+                .username("testuser")
+                .introduce(oldIntroduction)
+                .build();
+        String newIntroduce = "New introduction but deactivatedMember";
+
+        // When
+        assertThrows(DeletedMemberException.class, () -> member.changeIntroduce(newIntroduce));
+    }
+
 
     @Test
     void testNoArgsConstructor() {
