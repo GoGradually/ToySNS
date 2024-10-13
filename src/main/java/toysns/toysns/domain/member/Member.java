@@ -52,11 +52,11 @@ public class Member {
         }
         this.active = false;
     }
-    public void deleteAccount(LocalDateTime now) {
+    public void deleteAccount(LocalDateTime deletedDateTime) {
         if(this.deletedDateTime != null){
             throw new IllegalStateException();
         }
-        this.deletedDateTime = now;
+        this.deletedDateTime = deletedDateTime;
     }
     public void restoreAccount() {
         if(this.deletedDateTime == null){
