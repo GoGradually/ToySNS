@@ -3,8 +3,8 @@ package toysns.toysns.domain.member;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import toysns.toysns.domain.member.execption.DeactivatedMemberException;
-import toysns.toysns.domain.member.execption.DeletedMemberException;
+import toysns.toysns.execption.DeactivatedMemberException;
+import toysns.toysns.execption.DeletedMemberException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

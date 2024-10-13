@@ -1,21 +1,19 @@
 package toysns.toysns.domain.member.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
-import toysns.toysns.domain.member.execption.ConflictEmailException;
-import toysns.toysns.domain.member.execption.ConflictUsernameException;
-import toysns.toysns.domain.member.execption.MemberNotFoundException;
+import toysns.toysns.execption.ConflictEmailException;
+import toysns.toysns.execption.ConflictUsernameException;
+import toysns.toysns.execption.MemberNotFoundException;
 import toysns.toysns.domain.member.service.MemberService;
 import toysns.toysns.dto.MemberInfoDto;
 

@@ -1,12 +1,12 @@
-package toysns.toysns.domain.member.controller;
+package toysns.toysns.execption.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import toysns.toysns.domain.member.execption.ConflictEmailException;
-import toysns.toysns.domain.member.execption.ConflictUsernameException;
-import toysns.toysns.domain.member.execption.MemberNotFoundException;
+import toysns.toysns.execption.ConflictEmailException;
+import toysns.toysns.execption.ConflictUsernameException;
+import toysns.toysns.execption.MemberNotFoundException;
 
 @ControllerAdvice
 public class MemberControllerAdvice {

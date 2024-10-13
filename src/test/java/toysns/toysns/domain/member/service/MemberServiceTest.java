@@ -11,9 +11,9 @@ import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
-import toysns.toysns.domain.member.execption.ConflictEmailException;
-import toysns.toysns.domain.member.execption.ConflictUsernameException;
-import toysns.toysns.domain.member.execption.MemberNotFoundException;
+import toysns.toysns.execption.ConflictEmailException;
+import toysns.toysns.execption.ConflictUsernameException;
+import toysns.toysns.execption.MemberNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

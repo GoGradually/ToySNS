@@ -1,4 +1,4 @@
-package toysns.toysns.domain.member.execption;
+package toysns.toysns.execption;
 
 public class ConflictUsernameException extends IllegalStateException{
     public ConflictUsernameException(String s) {
