@@ -11,9 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
-import toysns.toysns.execption.ConflictEmailException;
-import toysns.toysns.execption.ConflictUsernameException;
-import toysns.toysns.execption.MemberNotFoundException;
+import toysns.toysns.execption.*;
 import toysns.toysns.domain.member.service.MemberService;
 import toysns.toysns.dto.MemberInfoDto;
 
@@ -257,6 +255,29 @@ class MemberControllerTest {
     void findMember_사용자를_찾을_수_없음() throws Exception {
         Long id = 1L;
         when(memberService.findMemberById(id)).thenThrow(new MemberNotFoundException());
+
+        mockMvc.perform(get("/member/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Member Not Found"));
+
+        verify(memberService).findMemberById(id);
+    }
+    @Test
+    void findMember_삭제된_사용자() throws Exception {
+        Long id = 1L;
+        when(memberService.findMemberById(id)).thenThrow(new DeletedMemberException());
+
+        mockMvc.perform(get("/member/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Member Not Found"));
+
+        verify(memberService).findMemberById(id);
+    }
+
+    @Test
+    void findMember_비활성화된_사용자() throws Exception {
+        Long id = 1L;
+        when(memberService.findMemberById(id)).thenThrow(new DeactivatedMemberException());
 
         mockMvc.perform(get("/member/{id}", id))
                 .andExpect(status().isNotFound())
