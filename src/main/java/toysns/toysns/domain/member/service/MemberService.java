@@ -8,6 +8,7 @@ import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final Clock clock;
 
     public Member createMember(Member member){
         return null;
@@ -44,19 +46,19 @@ public class MemberService {
         return null;
     }
 
-    public boolean deactivateMemberById(Long id) {
-        return false;
-    }
-
-    public boolean activateMemberById(Long id){
-        return false;
-    }
-
-    public LocalDateTime deleteMemberById(Long id) {
+    public Member deactivateMemberById(Long id) {
         return null;
     }
 
-    public LocalDateTime restoreMemberById(Long id){
+    public Member activateMemberById(Long id){
+        return null;
+    }
+
+    public Member deleteMemberById(Long id) {
+        return null;
+    }
+
+    public Member restoreMemberById(Long id){
         return null;
     }
 }

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import toysns.toysns.execption.DeactivatedMemberException;
 import toysns.toysns.execption.DeletedMemberException;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberTest {
@@ -132,47 +134,136 @@ class MemberTest {
         assertThat(member.getIntroduce()).isNull();
     }
 
-    //Todo
     @Test
-    void 계정_활성화(){
+    void 계정_활성화_성공(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(false)
+                .build();
+        //when
+        member.activate();
+        //then
+        assertThat(member.isActive()).isTrue();
+
+    }
+    @Test
+    void 계정_활성화_실패(){
+        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(true)
+                .build();
+        //when
+        //then
+        assertThrows(IllegalStateException.class, member::activate);
+        assertThat(member.isActive()).isTrue();
+
+    }
+    @Test
+    void 계정_비활성화_성공(){
+        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(true)
+                .build();
 
         //when
-
+        member.deactivate();
         //then
+        assertThat(member.isActive()).isFalse();
+
+    }
+    @Test
+    void 계정_비활성화_실패(){
+        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(false)
+                .build();
+
+        //when
+        assertThrows(IllegalStateException.class, member::activate);
+        assertThat(member.isActive()).isFalse();
 
     }
 
-    //Todo
     @Test
-    void 계정_비활성화(){
+    void 계정_삭제_성공(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .build();
 
         //when
-
+        member.deleteAccount(LocalDateTime.of(2024,10,10,0,0,0));
         //then
+        assertThat(member.getDeletedDateTime()).isNotNull();
+
+    }
+    @Test
+    void 계정_삭제_실패(){
+        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .deletedDateTime(LocalDateTime.of(2024,10,10,0,0,0))
+                .build();
+
+        //when
+        assertThrows(IllegalStateException.class, ()->member.deleteAccount(LocalDateTime.of(2024,10,15,0,0,0)));
+        assertThat(member.getDeletedDateTime()).isNotNull();
 
     }
 
-    //Todo
     @Test
-    void 계정_삭제(){
+    void 계정_복구_성공(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .deletedDateTime(LocalDateTime.of(2024,10,10,0,0,0))
+                .build();
 
         //when
-
+        member.restoreAccount();
         //then
-
+        assertThat(member.getDeletedDateTime()).isNull();
     }
-
-    //Todo
     @Test
-    void 계정_복구(){
+    void 계정_복구_실패(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .build();
 
         //when
 
         //then
+        assertThrows(IllegalStateException.class, member::restoreAccount);
+        assertThat(member.getDeletedDateTime()).isNull();
 
     }
 

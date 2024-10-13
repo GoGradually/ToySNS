@@ -11,10 +11,12 @@ import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
-import toysns.toysns.execption.ConflictEmailException;
-import toysns.toysns.execption.ConflictUsernameException;
-import toysns.toysns.execption.MemberNotFoundException;
+import toysns.toysns.execption.*;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,9 @@ class MemberServiceTest {
     MemberRepository memberRepository;
     @Mock
     MemberQueryRepository memberQueryRepository;
+
+    @Mock
+    Clock clock;
     @InjectMocks
     MemberService memberService;
 
@@ -273,67 +278,121 @@ class MemberServiceTest {
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
 
-    //Todo
     @Test
     void findById_삭제된_계정(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(true)
+                .deletedDateTime(LocalDateTime.of(2024, 10, 1, 0, 0, 0))
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
+        when(clock.instant()).thenReturn(Instant.parse("2024-10-10T10:00:00Z"));
+        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
 
-        //when
+        //when, then
+        assertThrows(DeletedMemberException.class, () -> memberService.findMemberById(1L));
 
-        //then
+        verify(memberRepository, times(1)).findById(1L);
+        verify(clock, times(1)).instant();
 
     }
 
-    //Todo
     @Test
     void findById_비활성화된_계정(){
-        //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(false)
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
 
-        //when
+        //when, then
+        assertThrows(DeactivatedMemberException.class, () -> memberService.findMemberById(1L));
 
-        //then
+        verify(memberRepository, times(1)).findById(1L);
 
     }
 
-    //Todo
     @Test
     void 계정_활성화(){
         //given
+        Member member = Member.builder()
+                .active(false)
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
 
         //when
+        Member result = memberService.activateMemberById(1L);
 
         //then
-
+        assertThat(result.isActive()).isTrue();
+        verify(memberRepository, times(1)).findById(1L);
     }
-    //Todo
     @Test
     void 계정_비활성화(){
         //given
+        Member member = Member.builder()
+                .active(true)
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
 
         //when
+        Member result = memberService.activateMemberById(1L);
 
         //then
+        assertThat(result.isActive()).isFalse();
+        verify(memberRepository, times(1)).findById(1L);
 
     }
-    //Todo
     @Test
     void 계정_삭제(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
+        when(clock.instant()).thenReturn(Instant.parse("2024-10-10T10:00:00Z"));
+        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
 
         //when
+        Member result = memberService.deleteMemberById(1L);
 
         //then
+        assertThat(result.getDeletedDateTime()).isNotNull();
+        assertThat(result.getDeletedDateTime()).isEqualTo(LocalDateTime.of(2024,10, 10, 10, 0, 0));
 
+        verify(memberRepository, times(1)).findById(1L);
     }
 
-    //Todo
     @Test
     void 계정_복구(){
         //given
+        Member member = Member.builder()
+                .username("test")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address("", "", ""))
+                .active(true)
+                .deletedDateTime(LocalDateTime.of(2024, 10, 1, 0, 0, 0))
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
 
         //when
+        Member result = memberService.restoreMemberById(1L);
 
         //then
+        assertThat(result.getDeletedDateTime()).isNull();
+
+        verify(memberRepository, times(1)).findById(1L);
 
     }
 }

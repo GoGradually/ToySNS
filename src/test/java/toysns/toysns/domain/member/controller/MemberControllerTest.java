@@ -157,7 +157,14 @@ class MemberControllerTest {
     @Test
     void deleteMemberById() throws Exception {
         Long id = 1L;
-        when(memberService.deleteMemberById(id)).thenReturn(LocalDateTime.of(2024, 10, 5, 0, 0,0));
+        Member member = Member.builder()
+                .username("testId")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address(null, null, null))
+                .deletedDateTime(LocalDateTime.of(2024, 10, 10, 0, 0, 0))
+                .build();
+        when(memberService.deleteMemberById(id)).thenReturn(member);
 
         mockMvc.perform(post("/member/{id}", id))
                 .andExpect(status().isOk());
@@ -168,7 +175,14 @@ class MemberControllerTest {
     @Test
     void deactivateMemberById() throws Exception {
         Long id = 1L;
-        when(memberService.deactivateMemberById(id)).thenReturn(true);
+        Member member = Member.builder()
+                .username("testId")
+                .email("test@email.com")
+                .introduce("hello")
+                .address(new Address(null, null, null))
+                .active(false)
+                .build();
+        when(memberService.deactivateMemberById(id)).thenReturn(member);
 
         mockMvc.perform(post("/member/{id}/deactivate", id))
                 .andExpect(status().isOk());
