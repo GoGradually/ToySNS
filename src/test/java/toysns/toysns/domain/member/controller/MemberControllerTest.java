@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
+import toysns.toysns.domain.member.MemberList;
+import toysns.toysns.dto.MemberInfoListDto;
 import toysns.toysns.execption.*;
 import toysns.toysns.domain.member.service.MemberService;
 import toysns.toysns.dto.MemberInfoDto;
@@ -120,9 +122,11 @@ class MemberControllerTest {
                 .build();
         when(memberService.findMemberById(id)).thenReturn(member);
 
+        MemberInfoDto memberInfoDto = new MemberInfoDto(member);
+
         mockMvc.perform(get("/member/{id}", id))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(member)));
+                .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
         verify(memberService).findMemberById(id);
     }
@@ -131,7 +135,7 @@ class MemberControllerTest {
     void findMembersByUsername() throws Exception {
         String username = "testUser";
         String lastUsername = "lastUser";
-        List<Member> memberList = new ArrayList<>();
+        List<Member> members = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Member member = Member.builder()
                     .username("test" + i)
@@ -139,15 +143,17 @@ class MemberControllerTest {
                     .introduce("hello")
                     .address(new Address(null, null, null))
                     .build();
-            memberList.add(member);
+            members.add(member);
+            lastUsername = "test" + i;
         }
+        MemberList memberList = new MemberList(members, lastUsername);
         when(memberService.findMembersByUsername(username, lastUsername)).thenReturn(memberList);
 
         mockMvc.perform(get("/members")
                         .param("username", username)
                         .param("lastUsername", lastUsername))
                 .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(memberList.stream().map(MemberInfoDto::new))));
+                .andExpect(content().string(objectMapper.writeValueAsString(new MemberInfoListDto(memberList))));
 
         verify(memberService).findMembersByUsername(username, lastUsername);
     }

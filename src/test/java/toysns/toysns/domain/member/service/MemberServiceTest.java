@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
+import toysns.toysns.domain.member.MemberList;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
@@ -254,11 +255,11 @@ class MemberServiceTest {
 
         when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
 
-        List<Member> result = memberService.findMembersByUsername("user", null);
+        MemberList result = memberService.findMembersByUsername("user", null);
 
-        assertEquals(10, result.size());
-        assertEquals(1L, result.get(0).getId());
-        assertEquals("User 10", result.get(9).getUsername());
+        assertEquals(10, result.getMemberList().size());
+        assertEquals(1L, result.getMemberList().get(0).getId());
+        assertEquals("User 10", result.getMemberList().get(9).getUsername());
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
@@ -269,11 +270,11 @@ class MemberServiceTest {
 
         when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
 
-        List<Member> result = memberService.findMembersByUsername("user", null);
+        MemberList result = memberService.findMembersByUsername("user", null);
 
-        assertEquals(10, result.size());
-        assertEquals(1L, result.get(0).getId());
-        assertEquals("User 10", result.get(9).getUsername());
+        assertEquals(10, result.getMemberList().size());
+        assertEquals(1L, result.getMemberList().get(0).getId());
+        assertEquals("User 10", result.getMemberList().get(9).getUsername());
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
