@@ -55,7 +55,9 @@ class MemberTest {
         Member member = Member.builder()
                 .username("testuser")
                 .address(new Address("Old City", "Old Street", "00000"))
+                .active(false)
                 .build();
+
         Address newAddress = new Address("New City", "New Street", "12345");
 
         // When
@@ -67,6 +69,7 @@ class MemberTest {
         Member member = Member.builder()
                 .username("testuser")
                 .address(new Address("Old City", "Old Street", "00000"))
+                .deletedDateTime(LocalDateTime.of(2024, 10, 10, 10, 10, 10))
                 .build();
         Address newAddress = new Address("New City", "New Street", "12345");
 
@@ -99,6 +102,7 @@ class MemberTest {
         Member member = Member.builder()
                 .username("testuser")
                 .introduce(oldIntroduction)
+                .active(false)
                 .build();
         String newIntroduce = "New introduction but deactivatedMember";
 
@@ -112,6 +116,7 @@ class MemberTest {
         Member member = Member.builder()
                 .username("testuser")
                 .introduce(oldIntroduction)
+                .deletedDateTime(LocalDateTime.of(2024, 10, 10, 10, 10 , 10))
                 .build();
         String newIntroduce = "New introduction but deactivatedMember";
 
@@ -195,7 +200,7 @@ class MemberTest {
                 .build();
 
         //when
-        assertThrows(IllegalStateException.class, member::activate);
+        assertThrows(IllegalStateException.class, member::deactivate);
         assertThat(member.isActive()).isFalse();
 
     }

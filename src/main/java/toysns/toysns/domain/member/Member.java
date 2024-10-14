@@ -3,6 +3,8 @@ package toysns.toysns.domain.member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
+import toysns.toysns.execption.DeactivatedMemberException;
+import toysns.toysns.execption.DeletedMemberException;
 
 import java.time.LocalDateTime;
 
@@ -26,16 +28,22 @@ public class Member {
 
     private String introduce;
 
+    @Builder.Default
     private boolean active = true;
 
+    @Builder.Default
     private LocalDateTime deletedDateTime = null;
 
     public boolean changeAddress(Address address){
+        if(deletedDateTime != null) throw new DeletedMemberException();
+        if(!active) throw new DeactivatedMemberException();
         this.address = address;
         return true;
     }
 
     public boolean changeIntroduce(String newIntroduce){
+        if(deletedDateTime != null) throw new DeletedMemberException();
+        if(!active) throw new DeactivatedMemberException();
         this.introduce = newIntroduce;
         return true;
     }
