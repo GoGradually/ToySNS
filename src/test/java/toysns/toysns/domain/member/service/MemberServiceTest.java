@@ -259,7 +259,8 @@ class MemberServiceTest {
 
         assertEquals(10, result.getMemberList().size());
         assertEquals(1L, result.getMemberList().get(0).getId());
-        assertEquals("User 10", result.getMemberList().get(9).getUsername());
+        assertEquals("user10", result.getMemberList().get(9).getUsername());
+        assertThat(result.getLastUsername()).isEqualTo("user10");
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
@@ -272,13 +273,52 @@ class MemberServiceTest {
 
         MemberList result = memberService.findMembersByUsername("user", null);
 
-        assertEquals(10, result.getMemberList().size());
-        assertEquals(1L, result.getMemberList().get(0).getId());
-        assertEquals("User 10", result.getMemberList().get(9).getUsername());
+        assertThat(result.getMemberList()).isEmpty();
+        assertThat(result.getLastUsername()).isNull();
 
         verify(memberQueryRepository, times(1)).findMembersByUsername("user", null);
     }
+    @Test
+    void MemberQueryRepository_사용자_검색_호출_삭제된_계정_필터링(){
+        //given
+        List<Member> mockUsers = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            mockUsers.add(
+                    Member.builder()
+                            .id((long) i)
+                            .username("user" + i)
+                            .deletedDateTime(LocalDateTime.of(2024,10,10,10,10,10))
+                            .build()
+            );
+        }
+        when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
+        //when
+        MemberList result = memberService.findMembersByUsername("user", null);
+        //then
+        assertThat(result.getMemberList()).isEmpty();
+        assertThat(result.getLastUsername()).isEqualTo("user10");
 
+    }
+    @Test
+    void MemberQueryRepository_사용자_검색_호출_비활성화된_계정_필터링(){
+        //given
+        List<Member> mockUsers = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            mockUsers.add(
+                    Member.builder()
+                            .id((long) i)
+                            .username("user" + i)
+                            .active(false)
+                            .build()
+            );
+        }
+        when(memberQueryRepository.findMembersByUsername("user",null)).thenReturn(mockUsers);
+        //when
+        MemberList result = memberService.findMembersByUsername("user", null);
+        //then
+        assertThat(result.getMemberList()).isEmpty();
+        assertThat(result.getLastUsername()).isEqualTo("user10");
+    }
     @Test
     void findById_삭제된_계정(){
         //given

@@ -16,6 +16,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,16 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
     public MemberList findMembersByUsername(String username, String lastUsername){
-        return null;
+        List<Member> result = memberQueryRepository.findMembersByUsername(username, lastUsername);
+        String nextLastUsername = null;
+        if(!result.isEmpty()){
+            nextLastUsername = result.getLast().getUsername();
+        }
+        return new MemberList(
+                result.stream()
+                        .filter(m-> m.isActive() && m.getDeletedDateTime() == null)
+                        .collect(Collectors.toList()),
+                nextLastUsername);
     }
 
     public boolean checkEmail(String email){
