@@ -53,11 +53,11 @@ public class MemberService {
     }
 
     public boolean checkEmail(String email){
-        return false;
+        return memberRepository.findByEmail(email).isEmpty();
     }
 
     public boolean checkUsername(String username){
-        return false;
+        return memberRepository.findByUsername(username).isEmpty();
     }
 
     public Member updateMemberIntroduce(Long memberId, String newIntroduce){
