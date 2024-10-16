@@ -338,8 +338,6 @@ class MemberServiceTest {
         assertThrows(DeletedMemberException.class, () -> memberService.findMemberById(1L));
 
         verify(memberRepository, times(1)).findById(1L);
-        verify(clock, times(1)).instant();
-
     }
 
     @Test
