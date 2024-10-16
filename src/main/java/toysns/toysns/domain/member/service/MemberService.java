@@ -73,18 +73,26 @@ public class MemberService {
     }
 
     public Member deactivateMemberById(Long id) {
-        return null;
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        member.deactivate();
+        return member;
     }
 
     public Member activateMemberById(Long id){
-        return null;
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        member.activate();
+        return member;
     }
 
     public Member deleteMemberById(Long id) {
-        return null;
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        member.deleteAccount(LocalDateTime.now(clock));
+        return member;
     }
 
     public Member restoreMemberById(Long id){
-        return null;
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        member.restoreAccount();
+        return member;
     }
 }
