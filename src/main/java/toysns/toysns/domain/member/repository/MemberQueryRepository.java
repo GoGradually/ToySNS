@@ -18,14 +18,17 @@ public class MemberQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     public List<Member> findMembersByUsername(String username, String lastUsername){
-        queryFactory.select(member);
-        return null;
+        return queryFactory.select(member)
+                .from(member)
+                .where(usernameStartWith(username), usernameGt(lastUsername))
+                .limit(10)
+                .fetch();
     }
 
-    private BooleanExpression usernameEq(String usernameCond){
+    private BooleanExpression usernameStartWith(String usernameCond){
         return usernameCond == null ? null : member.username.startsWith(usernameCond);
     }
-    public BooleanExpression usernameGt(String lastUsernameCond){
+    private BooleanExpression usernameGt(String lastUsernameCond){
         return lastUsernameCond == null ? null : member.username.gt(lastUsernameCond);
     }
 }

@@ -1,12 +1,15 @@
 package toysns.toysns.domain.member.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
+import toysns.toysns.config.DatabaseConfig;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 
@@ -16,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@Import({DatabaseConfig.class, MemberQueryRepository.class})
 class MemberQueryRepositoryTest {
     @Autowired
     private MemberQueryRepository memberQueryRepository;
