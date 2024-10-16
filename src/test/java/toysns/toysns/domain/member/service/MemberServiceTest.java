@@ -331,13 +331,12 @@ class MemberServiceTest {
                 .deletedDateTime(LocalDateTime.of(2024, 10, 1, 0, 0, 0))
                 .build();
         when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
-        when(clock.instant()).thenReturn(Instant.parse("2024-10-10T10:00:00Z"));
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
 
         //when, then
         assertThrows(DeletedMemberException.class, () -> memberService.findMemberById(1L));
 
         verify(memberRepository, times(1)).findById(1L);
+
     }
 
     @Test
