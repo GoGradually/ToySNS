@@ -63,7 +63,7 @@ class MemberServiceTest {
 
         //then
         assertNotNull(savedMember);
-        assertEquals("testId", savedMember.getId());
+        assertEquals("testId", savedMember.getUsername());
         assertEquals("test@email.com", savedMember.getEmail());
         verify(memberRepository, times(1)).save(any(Member.class));
 

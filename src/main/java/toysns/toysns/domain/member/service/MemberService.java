@@ -8,9 +8,7 @@ import toysns.toysns.domain.member.MemberList;
 import toysns.toysns.domain.member.repository.MemberQueryRepository;
 import toysns.toysns.domain.member.repository.MemberRepository;
 import toysns.toysns.dto.MemberInfoDto;
-import toysns.toysns.execption.DeactivatedMemberException;
-import toysns.toysns.execption.DeletedMemberException;
-import toysns.toysns.execption.MemberNotFoundException;
+import toysns.toysns.execption.*;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -27,6 +25,12 @@ public class MemberService {
     private final Clock clock;
 
     public Member createMember(Member member){
+        if (memberRepository.findByUsername(member.getUsername()).isPresent()) {
+            throw new ConflictUsernameException("이미 존재하는 ID입니다.");
+        }
+        if (memberRepository.findByEmail(member.getEmail()).isPresent()) {
+            throw new ConflictEmailException("이미 존재하는 이메일입니다.");
+        }
         memberRepository.save(member);
         return member;
     }
