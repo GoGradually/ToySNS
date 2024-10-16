@@ -113,8 +113,10 @@ class MemberServiceTest {
         //given
         Long memberId = 100L;
         Member member = Member.builder()
+                        .id(memberId)
+                        .email("test@email.com")
                         .username("testId")
-                                .build();
+                        .build();
         when(memberRepository.findById(memberId)).thenReturn(java.util.Optional.of(member));
 
         //when
