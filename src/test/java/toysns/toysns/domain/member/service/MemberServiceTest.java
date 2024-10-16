@@ -381,7 +381,7 @@ class MemberServiceTest {
         when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
 
         //when
-        Member result = memberService.activateMemberById(1L);
+        Member result = memberService.deactivateMemberById(1L);
 
         //then
         assertThat(result.isActive()).isFalse();
@@ -399,7 +399,7 @@ class MemberServiceTest {
                 .build();
         when(memberRepository.findById(1L)).thenReturn(Optional.ofNullable(member));
         when(clock.instant()).thenReturn(Instant.parse("2024-10-10T10:00:00Z"));
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
+        when(clock.getZone()).thenReturn(ZoneId.of("UTC"));
 
         //when
         Member result = memberService.deleteMemberById(1L);
