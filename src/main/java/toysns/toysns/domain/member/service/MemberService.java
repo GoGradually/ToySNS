@@ -61,11 +61,15 @@ public class MemberService {
     }
 
     public Member updateMemberIntroduce(Long memberId, String newIntroduce){
-        return null;
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        member.changeIntroduce(newIntroduce);
+        return member;
     }
 
     public Member updateMemberAddress(Long memberId, Address address){
-        return null;
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        member.changeAddress(address);
+        return member;
     }
 
     public Member deactivateMemberById(Long id) {
