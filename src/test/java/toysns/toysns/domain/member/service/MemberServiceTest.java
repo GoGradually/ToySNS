@@ -56,7 +56,7 @@ class MemberServiceTest {
                 .build();
 
 
-        when(memberRepository.save(any(Member.class))).thenReturn(member);
+        when(memberRepository.save(eq(member))).thenReturn(member);
 
         //when
         Member savedMember = memberService.createMember(member);
@@ -65,7 +65,7 @@ class MemberServiceTest {
         assertNotNull(savedMember);
         assertEquals("testId", savedMember.getUsername());
         assertEquals("test@email.com", savedMember.getEmail());
-        verify(memberRepository, times(1)).save(any(Member.class));
+        verify(memberRepository, times(1)).save(eq(member));
 
 
     }
