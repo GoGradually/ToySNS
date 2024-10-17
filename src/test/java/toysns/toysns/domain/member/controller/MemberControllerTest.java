@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -16,10 +18,13 @@ import toysns.toysns.dto.MemberInfoListDto;
 import toysns.toysns.execption.*;
 import toysns.toysns.domain.member.service.MemberService;
 import toysns.toysns.dto.MemberInfoDto;
+import toysns.toysns.execption.advice.MemberControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,7 +46,9 @@ class MemberControllerTest {
     void setUp() {
         // JUnit 5 에서 자동으로 닫아주기 때문에, 굳이 @AfterEach 사용 안해도 됨
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(memberController)
+                .setControllerAdvice(new MemberControllerAdvice())
+                .build();
     }
 
     @Test
@@ -68,6 +75,8 @@ class MemberControllerTest {
     void updateMemberIntroduce() throws Exception {
         Long id = 1L;
         String newIntroduce = "let me introduce";
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("introduce", newIntroduce);
         Member member = Member.builder()
                 .id(1L)
                 .username("testId")
@@ -76,15 +85,15 @@ class MemberControllerTest {
                 .address(new Address(null, null, null))
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member); // 필요한 데이터 설정
-        when(memberService.updateMemberIntroduce(eq(id), newIntroduce)).thenReturn(member);
+        when(memberService.updateMemberIntroduce(eq(id), eq(newIntroduce))).thenReturn(member);
 
         mockMvc.perform(post("/member/{id}/introduce", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newIntroduce))) // JSON 형식의 요청 본문
+                        .content(objectMapper.writeValueAsString(requestBody))) // JSON 형식의 요청 본문
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
-        verify(memberService).updateMemberIntroduce(eq(id), newIntroduce);
+        verify(memberService).updateMemberIntroduce(eq(id), eq(newIntroduce));
     }
 
     @Test
@@ -100,14 +109,17 @@ class MemberControllerTest {
                 .address(address)
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member);
+        Map<String, Address> requestBody = new HashMap<>();
+        requestBody.put("address", address);
         when(memberService.updateMemberAddress(id, address)).thenReturn(member);
 
         mockMvc.perform(post("/member/{id}/address", id)
-                .param("address", objectMapper.writeValueAsString(address)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
-        verify(memberService).updateMemberAddress(eq(id), address);
+        verify(memberService).updateMemberAddress(id, address);
     }
 
     @Test
@@ -170,7 +182,7 @@ class MemberControllerTest {
                 .build();
         when(memberService.deleteMemberById(id)).thenReturn(member);
 
-        mockMvc.perform(post("/member/{id}", id))
+        mockMvc.perform(post("/member/{id}/delete", id))
                 .andExpect(status().isOk());
 
         verify(memberService).deleteMemberById(id);
@@ -180,6 +192,7 @@ class MemberControllerTest {
     void deactivateMemberById() throws Exception {
         Long id = 1L;
         Member member = Member.builder()
+                .id(id)
                 .username("testId")
                 .email("test@email.com")
                 .introduce("hello")
@@ -227,14 +240,14 @@ class MemberControllerTest {
                 .address(new Address(null, null, null))
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member);
-        when(memberService.createMember(member)).thenThrow(new ConflictUsernameException());
+        when(memberService.createMember(any(Member.class))).thenThrow(new ConflictUsernameException());
         mockMvc.perform(post("/member/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(memberInfoDto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("This username is already exist"));
 
-        verify(memberService).createMember(member);
+        verify(memberService).createMember(any(Member.class));
     }
 
     @Test
@@ -246,7 +259,7 @@ class MemberControllerTest {
                 .address(new Address(null, null, null))
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member);
-        when(memberService.createMember(member)).thenThrow(new ConflictEmailException());
+        when(memberService.createMember(any(Member.class))).thenThrow(new ConflictEmailException());
 
         mockMvc.perform(post("/member/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -254,7 +267,7 @@ class MemberControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("This email is already exist"));
 
-        verify(memberService).createMember(member);
+        verify(memberService).createMember(any(Member.class));
     }
 
     @Test
