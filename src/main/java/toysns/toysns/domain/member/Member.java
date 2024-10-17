@@ -7,6 +7,7 @@ import toysns.toysns.execption.DeactivatedMemberException;
 import toysns.toysns.execption.DeletedMemberException;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -30,6 +31,32 @@ public class Member {
 
     @Builder.Default
     private boolean active = true;
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", introduce='" + introduce + '\'' +
+                ", active=" + active +
+                ", deletedDateTime=" + deletedDateTime +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return active == member.active && Objects.equals(id, member.id) && Objects.equals(username, member.username) && Objects.equals(email, member.email) && Objects.equals(address, member.address) && Objects.equals(introduce, member.introduce) && Objects.equals(deletedDateTime, member.deletedDateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, address, introduce, active, deletedDateTime);
+    }
 
     @Builder.Default
     private LocalDateTime deletedDateTime = null;
