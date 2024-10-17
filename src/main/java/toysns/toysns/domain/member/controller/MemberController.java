@@ -1,6 +1,7 @@
 package toysns.toysns.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
@@ -11,6 +12,7 @@ import toysns.toysns.dto.MemberInfoListDto;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
 
@@ -26,13 +28,13 @@ public class MemberController {
         return new MemberInfoDto(createdMember);
     }
 
-    @PostMapping("/member/{id}/introduce")
+    @PatchMapping("/member/{id}/introduce")
     public MemberInfoDto updateMemberIntroduce(@PathVariable Long id, @RequestBody String introduce){
         Member updatedMember = memberService.updateMemberIntroduce(id, introduce);
         return new MemberInfoDto(updatedMember);
     }
 
-    @PostMapping("/member/{id}/address")
+    @PatchMapping("/member/{id}/address")
     public MemberInfoDto updateMemberAddress(@PathVariable Long id, @RequestBody Address address){
         Member member = memberService.updateMemberAddress(id, address);
         return new MemberInfoDto(member);

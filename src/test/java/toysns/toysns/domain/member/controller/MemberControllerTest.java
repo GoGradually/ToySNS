@@ -75,8 +75,6 @@ class MemberControllerTest {
     void updateMemberIntroduce() throws Exception {
         Long id = 1L;
         String newIntroduce = "let me introduce";
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("introduce", newIntroduce);
         Member member = Member.builder()
                 .id(1L)
                 .username("testId")
@@ -85,15 +83,15 @@ class MemberControllerTest {
                 .address(new Address(null, null, null))
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member); // 필요한 데이터 설정
-        when(memberService.updateMemberIntroduce(eq(id), eq(newIntroduce))).thenReturn(member);
+        when(memberService.updateMemberIntroduce(eq(id), anyString())).thenReturn(member);
 
-        mockMvc.perform(post("/member/{id}/introduce", id)
+        mockMvc.perform(patch("/member/{id}/introduce", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestBody))) // JSON 형식의 요청 본문
+                        .content(objectMapper.writeValueAsString(newIntroduce))) // JSON 형식의 요청 본문
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
-        verify(memberService).updateMemberIntroduce(eq(id), eq(newIntroduce));
+        verify(memberService).updateMemberIntroduce(eq(id), anyString());
     }
 
     @Test
@@ -109,17 +107,15 @@ class MemberControllerTest {
                 .address(address)
                 .build();
         MemberInfoDto memberInfoDto = new MemberInfoDto(member);
-        Map<String, Address> requestBody = new HashMap<>();
-        requestBody.put("address", address);
-        when(memberService.updateMemberAddress(id, address)).thenReturn(member);
+        when(memberService.updateMemberAddress(eq(id), eq(address))).thenReturn(member);
 
-        mockMvc.perform(post("/member/{id}/address", id)
+        mockMvc.perform(patch("/member/{id}/address", id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)))
+                .content(objectMapper.writeValueAsString(address)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(memberInfoDto)));
 
-        verify(memberService).updateMemberAddress(id, address);
+        verify(memberService).updateMemberAddress(eq(id), eq(address));
     }
 
     @Test
