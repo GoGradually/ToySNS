@@ -25,6 +25,14 @@ public class Address {
     protected Address() {
     }
 
+    @Override
+    public String toString() {
+        return "Address{" +
+                "street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
