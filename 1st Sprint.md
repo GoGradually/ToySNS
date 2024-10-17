@@ -63,7 +63,7 @@
 - 도메인 별로 예외처리 작성
 - 테스트 코드에 해당 예외 처리하는 것 반영
 
-[LocalDateTime 을 사용하는 함수의 테스팅 방법](https://www.notion.so/LocalDateTime-11eaf271a14780e59370ca55e3da4470?pvs=21)
+[LocalDateTime 을 사용하는 함수의 테스팅 방법](https://go-gradually.tistory.com/94)
 
 # 아키텍처 설계 & 계약 설계
 
