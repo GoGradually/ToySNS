@@ -2,6 +2,7 @@ package toysns.toysns.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import toysns.toysns.domain.member.Address;
 import toysns.toysns.domain.member.Member;
 import toysns.toysns.domain.member.MemberList;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
 
