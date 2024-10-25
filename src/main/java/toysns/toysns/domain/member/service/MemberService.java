@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -26,6 +26,7 @@ public class MemberService {
     private final MemberQueryRepository memberQueryRepository;
     private final Clock clock;
 
+    @Transactional
     public Member createMember(Member member){
         if (memberRepository.findByUsername(member.getUsername()).isPresent()) {
             throw new ConflictUsernameException("이미 존재하는 ID입니다.");
@@ -36,6 +37,7 @@ public class MemberService {
         memberRepository.save(member);
         return member;
     }
+
     public Member findMemberById(Long memberId){
         return memberRepository.findById(memberId)
                 .map(member -> {
@@ -66,36 +68,42 @@ public class MemberService {
         return memberRepository.findByUsername(username).isEmpty();
     }
 
+    @Transactional
     public Member updateMemberIntroduce(Long memberId, String newIntroduce){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         member.changeIntroduce(newIntroduce);
         return member;
     }
 
+    @Transactional
     public Member updateMemberAddress(Long memberId, Address address){
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         member.changeAddress(address);
         return member;
     }
 
+    @Transactional
     public Member deactivateMemberById(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         member.deactivate();
         return member;
     }
 
+    @Transactional
     public Member activateMemberById(Long id){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         member.activate();
         return member;
     }
 
+    @Transactional
     public Member deleteMemberById(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         member.deleteAccount(LocalDateTime.now(clock));
         return member;
     }
 
+    @Transactional
     public Member restoreMemberById(Long id){
         Member member = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
         member.restoreAccount();
